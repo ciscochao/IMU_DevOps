@@ -1,4 +1,6 @@
 # Created by F0rGeEk
-
+.gitignore
+.gitattributes
+.idea
 venv
 IMU_DevOps/settings.py
