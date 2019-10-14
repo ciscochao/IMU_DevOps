@@ -20,6 +20,7 @@ from test.core import handler
 
 
 BASE_DIR = os.path.dirname(os.getcwd())
+print('base dir is %s' % BASE_DIR)
 
 # 设置工作目录
 sys.path.append(BASE_DIR)

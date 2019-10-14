@@ -44,7 +44,3 @@ class InfoCollection(object):
         pass
         return data
 
-    def build_report_data(self, data):
-        pass
-        return data
-

@@ -1,9 +1,9 @@
 # coding=utf-8
 """
-# @Time    : 10/14/19 4:34 PM
+# @Time    : 10/14/19 10:32 PM
 # @Author  : F0rGeEk@root
 # @Email   : bat250@protonmail.com
-# @File    : setting.py
+# @File    : urls
 # @Software: PyCharm
 ***********************************************************
 ███████╗ ██████╗ ██████╗  ██████╗ ███████╗███████╗██╗  ██╗
@@ -14,22 +14,12 @@
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝
 ***********************************************************
 """
+from django.urls import path
+from assets import views
 
-import os
 
-# 远端接收数据的服务器
-Params = {
-    "server": "127.0.0.1",
-    "port": 8000,
-    'url': '/assets/report/',
-    'request_timeout': 30,
-}
+app_name = 'assets'
 
-# 日志文件配置
-
-# PATH = os.path.join(os.path.dirname(os.getcwd()), 'IMU_DevOps', 'test', './Log', 'IMU_assets.log')
-PATH = "/root/forgeek/python/Projects/IMU_DevOps/Log"
-
-print(PATH)
-
-# 更多配置，请都集中在此文件中
+urlpatterns = [
+    path('report/', views.report, name='report')
+]

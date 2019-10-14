@@ -18,7 +18,7 @@ import json
 import time
 import urllib.parse
 import urllib.request
-from Client.core import info_collection
+from test.core import info_collection
 from test.conf import settings
 
 
@@ -54,16 +54,16 @@ class ArgvHandler(object):
     def collect_data():
         # 收集硬件信息，用于测试
         info = info_collection.InfoCollection()
-        asset_data = info.collect()
-        print(asset_data)
+        assets_data = info.collect()
+        print(assets_data)
 
     @staticmethod
     def report_data():
         # 收集硬件信息并发送至服务端
         info = info_collection.InfoCollection()
-        asset_data = info.collect()
+        assets_data = info.collect()
         # 将数据打包转换称json格式
-        data = {"asset_data": json.dumps(asset_data)}
+        data = {"assets_data": json.dumps(assets_data)}
         # 根据settings中的配置，构造urls
         url = "http://%s:%s%s" % (settings.Params['server'], settings.Params['port'], settings.Params['url'])
         print("正在将数据发送至:[%s] ..... " % url)

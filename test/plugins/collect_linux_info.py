@@ -45,7 +45,7 @@ def collect():
     col_data['wake_up_type'] = raw_data['wake-up Type']
 
     col_data.update(get_cpu_info())
-    col_data.update(get_disk_info())
+    #col_data.update(get_disk_info())
     col_data.update(get_nic_info())
     col_data.update(get_os_info())
     col_data.update(get_ram_info())
@@ -117,8 +117,8 @@ def get_ram_info():
             item_list = []
         else:
             item_list.append(line.strip())
-    print('item_list is %s ' % item_list)
-    print('raw_ram_list is %s' % raw_ram_list)
+    # print('item_list is %s ' % item_list)
+    # print('raw_ram_list is %s' % raw_ram_list)
 
     ram_list = []
     for item in raw_ram_list:
@@ -126,10 +126,10 @@ def get_ram_info():
         ram_item_to_dic = {}
         for i in item:
             item_data = i.split(":")
-            print('data is:%s' % item_data)
+            # print('data is:%s' % item_data)
             if len(item_data) == 2:
                 key, v = item_data
-                print('key is :%s' % key)
+                # print('key is :%s' % key)
                 if key == 'Size':
                     if v.strip() != "No Module Installed":
                         ram_item_to_dic['volume'] = v.split()[0].strip()
