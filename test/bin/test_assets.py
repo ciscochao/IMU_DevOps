@@ -59,6 +59,7 @@ def update_test(data):
 
 if __name__ == '__main__':
     windows_data = {
+        "sn": "test_windows_1",
         "server_os_type": "Windows",
         "server_os_release": "2018 64bit R2",
         "server_os_distribution": "Microsoft",
@@ -133,6 +134,7 @@ if __name__ == '__main__':
     }
 
     linux_data = {
+        "sn": "test_linux_1",
         "assets_type": "server",
         "assets_manufacturer": "IBM.",
         "server_sn": "F3LN110",

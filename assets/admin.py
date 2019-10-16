@@ -1,12 +1,11 @@
 from django.contrib import admin
 from assets import models
 
-# Register your models here.
 
 class NewAssetsAdmin(admin.ModelAdmin):
-    list_display = ['assets_type', 'assets_sn', 'assets_model', 'assets_manufacturer', 'assets_c_time', 'assets_u_time']
-    list_filter = ['assets_type', 'assets_manufacturer', 'assets_c_time']
-    search_fields = ('assets_sn', )
+    list_display = ['type', 'sn', 'model', 'manufacturer', 'c_time', 'u_time']
+    list_filter = ['type', 'manufacturer', 'c_time']
+    search_fields = ('sn', )
 
 
 class AssetsAdmin(admin.ModelAdmin):

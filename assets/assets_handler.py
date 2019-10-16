@@ -1,9 +1,9 @@
 # coding=utf-8
 """
-# @Time    : 10/14/19 4:34 PM
+# @Time    : 10/16/19 5:34 PM
 # @Author  : F0rGeEk@root
 # @Email   : bat250@protonmail.com
-# @File    : setting.py
+# @File    : assets_handler.py
 # @Software: PyCharm
 ***********************************************************
 ███████╗ ██████╗ ██████╗  ██████╗ ███████╗███████╗██╗  ██╗
@@ -14,22 +14,29 @@
 ╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝
 ***********************************************************
 """
+import json
+from assets import models
 
-import os
 
-# 远端接收数据的服务器
-Params = {
-    "server": "127.0.0.1",
-    "port": 8000,
-    'url': '/assets/report/',
-    'request_timeout': 30,
-}
+class NewAssets(object):
+    def __init__(self, request, data):
+        self.request = request
+        self.data = data
 
-# 日志文件配置
+    def add_to_new_assets_zone(self):
+        defaults = {
+            'data': json.dumps(self.data),
+            'assets_type': self.data.get('assets_type'),
+            'manufacturer': self.data.get('manufacturer'),
+            'model': self.data.get('model'),
+            'ram_volume': self.data.get('ram_volume'),
+            'cpu_model': self.data.get('cpu_model'),
+            'cpu_count': self.data.get('cpu_count'),
+            'cpu_core_count': self.data.get('cpu_core_count'),
+            'os_distribution': self.data.get('os_distribution'),
+            'os_release': self.data.get('os_release'),
+            'os_type': self.data.get('os_type'),
+        }
+        models.NewAssetApprovalZone.objects.update_or_create(sn=self.data['sn'], defaults=defaults)
 
-# PATH = os.path.join(os.path.dirname(os.getcwd()), 'IMU_DevOps', 'test', './Log', 'IMU_assets.log')
-PATH = "/root/Python/Projects/IMU_DevOps/Log/CMDB.log"
-
-print(PATH)
-
-# 更多配置，请都集中在此文件中
+        return '资产已加入或更新至待审批区！'

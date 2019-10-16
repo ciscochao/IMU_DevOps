@@ -4,7 +4,7 @@ from django.db import models
 class Assets(models.Model):
     """资产共有属性表"""
     # 资产类型
-    assets_types = (
+    assets_type = (
         ('server', '服务器'),
         ('network', '网络设备'),
         ('storage', '存储设备'),
@@ -22,7 +22,7 @@ class Assets(models.Model):
         ('4', '未知'),
     )
 
-    assets_types = models.CharField(choices=assets_types, max_length=64, default='other', verbose_name='资产类型')
+    assets_type = models.CharField(choices=assets_type, max_length=64, default='other', verbose_name='资产类型')
     assets_sn = models.CharField(max_length=128, unique=True, verbose_name='资产编号')
     assets_name = models.CharField(max_length=64, unique=True, editable=True, verbose_name='资产名称')
     assets_status = models.SmallIntegerField(choices=assets_status, default=4, verbose_name='资产状态')
@@ -50,13 +50,13 @@ class Assets(models.Model):
     assets_memo = models.TextField(null=True, blank=True, verbose_name='备注')
 
     def __str__(self):
-        return '<%s> %s' % (self.get_assets_types_display(), self.assets_name)
+        return '<%s> %s' % (self.get_assets_type_display(), self.assets_name)
 
     class Meta:
         db_table = 'imu_assets'
         verbose_name = '资产总表'
         verbose_name_plural = verbose_name
-        ordering = ['-c_time']
+        ordering = ['-assets_c_time']
 
 
 class ServerAssets(models.Model):
@@ -226,7 +226,7 @@ class OfficeAssets(models.Model):
         (7, '其他'),
     )
     assets = models.OneToOneField('Assets', related_name='office_assets', on_delete=models.CASCADE)
-    office_type = models.CharField(choices=office_type_choice, default=7, verbose_name='办公设备类型')
+    office_type = models.SmallIntegerField(choices=office_type_choice, default=7, verbose_name='办公设备类型')
     office_sn = models.CharField(max_length=128, unique=True, verbose_name='设备序列号')
     office_user = models.CharField(max_length=100, unique=True, editable=True, verbose_name='使用人')
 
@@ -399,7 +399,7 @@ class DiskAssets(models.Model):
         db_table = 'imu_disk_assets'
         verbose_name = '硬盘'
         verbose_name_plural = verbose_name
-        unique_together = ('asset', 'sn')
+        unique_together = ('assets', 'disk_sn')
 
 
 class RAMAssets(models.Model):
@@ -419,7 +419,7 @@ class RAMAssets(models.Model):
         db_table = 'imu_ram_assets'
         verbose_name = '内存'
         verbose_name_plural = verbose_name
-        unique_together = ('assets', 'RAM_slot')
+        unique_together = ('assets', 'ram_slot')
 
 
 class CPUAssets(models.Model):
@@ -446,9 +446,14 @@ class DomainAssets(models.Model):
     domain_address = models.URLField('域名地址', max_length=100, null=False)
     domain_int_ip = models.GenericIPAddressField('对内IP地址', blank=True, null=True)
     domain_out_ip = models.GenericIPAddressField('对外IP地址', blank=True, null=True)
-    domain_department = models.CharField('所属部门', blank=True, null=True)
+    domain_department = models.CharField('所属部门', max_length=64, blank=True, null=True)
     domain_admin = models.ForeignKey('users.UserProfile', blank=True, related_name='domain_admin',
                                      verbose_name='域名管理员', on_delete=models.PROTECT)
+
+    class Meta:
+        db_table = 'imu_domain_assets'
+        verbose_name = '域名表'
+        verbose_name_plural = verbose_name
 
 
 class ProviderAssets(models.Model):
@@ -473,10 +478,15 @@ class CloudAssets(models.Model):
         (0, '公有云'),
         (1, '私有云'),
     )
-    cloud_type = models.CharField('云类型', choices=cloud_type_choice, default=1)
+    cloud_type = models.SmallIntegerField('云类型', choices=cloud_type_choice, default=1)
     cloud_brand = models.CharField('云厂商', max_length=100, blank=True, null=True)
-    cloud_admin = models.ForeignKey('users.UserProfile', blank=True, related_name='domain_admin',
+    cloud_admin = models.ForeignKey('users.UserProfile', blank=True, related_name='cloud_admin',
                                     verbose_name='云平台管理员', on_delete=models.PROTECT)
+
+    class Meta:
+        db_table = 'imu_cloud_assets'
+        verbose_name = '云平台资产表'
+        verbose_name_plural = verbose_name
 
 
 class OtherAssets(models.Model):
@@ -484,7 +494,7 @@ class OtherAssets(models.Model):
 
     other_name = models.CharField('资产名称', max_length=64, unique=True)
     other_sn = models.CharField('SN号', max_length=128, blank=True, null=True)
-    other_admin = models.ForeignKey('users.UserProfile', blank=True, related_name='domain_admin',
+    other_admin = models.ForeignKey('users.UserProfile', blank=True, related_name='other_admin',
                                     verbose_name='资产管理员', on_delete=models.PROTECT)
 
     def __str__(self):
@@ -534,7 +544,7 @@ class NewAssetApprovalZone(models.Model):
     """新资产待审批区域"""
 
     sn = models.CharField('资产SN号', max_length=128, unique=True)  # 此字段必填
-    assets_type_choice = (
+    type_choice = (
         ('server', '服务器'),
         ('network', '网络设备'),
         ('storage', '存储设备'),
@@ -543,11 +553,10 @@ class NewAssetApprovalZone(models.Model):
         ('office', '办公设备'),
         ('other', '其他设备'),
     )
-    assets_type = models.CharField('资产类型', choices=assets_type_choice, default='server', max_length=64, blank=True,
-                                   null=True)
+    type = models.CharField('资产类型', choices=type_choice, default='server', max_length=64, blank=True, null=True)
     manufacturer = models.CharField('生产厂商', max_length=64, blank=True, null=True)
     model = models.CharField('型号', max_length=128, blank=True, null=True)
-    ram_size = models.PositiveIntegerField('内存大小', blank=True, null=True)
+    ram_volume = models.PositiveIntegerField('内存大小', blank=True, null=True)
     cpu_model = models.CharField('CPU型号', max_length=128, blank=True, null=True)
     cpu_count = models.PositiveSmallIntegerField('CPU物理数量', blank=True, null=True)
     cpu_core_count = models.PositiveSmallIntegerField('CPU核心数量', blank=True, null=True)
@@ -558,7 +567,7 @@ class NewAssetApprovalZone(models.Model):
     data = models.TextField('资产数据')  # 此字段必填
 
     c_time = models.DateTimeField('汇报日期', auto_now_add=True)
-    m_time = models.DateTimeField('数据更新日期', auto_now=True)
+    u_time = models.DateTimeField('数据更新日期', auto_now=True)
     approved = models.BooleanField('是否批准', default=False)
 
     def __str__(self):
