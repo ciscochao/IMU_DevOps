@@ -2,21 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="dcf446d9-d738-4ea2-9394-245efb080773" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Log/CMDB.log" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/assets_handler.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/migrations/0001_initial.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/migrations/0002_auto_20191015_1643.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/migrations/0003_auto_20191016_1739.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/migrations/0004_auto_20191016_1741.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/users/migrations/0001_initial.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/assets_test.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/migrations/0002_auto_20191017_1650.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/migrations/0003_auto_20191017_1651.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/migrations/0004_auto_20191017_1724.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/assets/migrations/0005_ramassets_sn.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/IMU_DevOps/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/IMU_DevOps/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Log/CMDB.log" beforeDir="false" afterPath="$PROJECT_DIR$/Log/CMDB.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/assets/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/assets_handler.py" beforeDir="false" afterPath="$PROJECT_DIR$/assets/assets_handler.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/assets/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/migrations/0002_auto_20191015_1643.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/migrations/0003_auto_20191016_1739.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/migrations/0004_auto_20191016_1741.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/assets/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/assets/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/assets/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/bin/test_assets.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/bin/test_assets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/conf/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/test/conf/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/bin/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/Conf/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/bin/main.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/bin/test_assets.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/conf/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/conf/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Conf/assets_setting.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/core/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/core/handler.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/core/info_collection.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/log/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/plugins/__init__.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/plugins/collect_linux_info.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/test/plugins/collect_windows_info.py" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -56,7 +71,7 @@
         <item name="db" type="feb32156:DbDataSourceImpl" />
         <item name="schemas" type="d4e8921:DatabaseStructure$FamilyGroup" />
         <item name="main: schema" type="981a47c2:SqliteImplModel$Schema" />
-        <item name="imu_NewAssetApprovalZone: table" type="3d80ac25:SqliteImplModel$Table" />
+        <item name="imu_assets: table" type="3d80ac25:SqliteImplModel$Table" />
       </path>
     </expand>
     <select />
@@ -86,7 +101,7 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../My_CMDB" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -108,7 +123,117 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python.assets_test">
+    <configuration name="assets_handler" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="IMU_DevOps" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/assets" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/assets/assets_handler.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="assets_test" type="PythonConfigurationType" factoryName="Python">
+      <module name="IMU_DevOps" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/assets" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/assets/assets_test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="IMU_DevOps" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/bin" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/bin/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_assets" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="IMU_DevOps" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/test/bin" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test/bin/test_assets.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="views" type="PythonConfigurationType" factoryName="Python" temporary="true">
+      <module name="IMU_DevOps" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/assets" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/assets/views.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="IMU_DevOps" type="Python.DjangoServer" factoryName="Django server">
       <module name="IMU_DevOps" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -133,6 +258,39 @@
       <option name="customRunCommand" value="" />
       <method v="2" />
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.test_assets" />
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python.assets_handler" />
+        <item itemvalue="Python.views" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ServiceViewManager">
+    <option name="allServicesViewState">
+      <serviceView>
+        <treeState>
+          <expand>
+            <path>
+              <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@4b74f898" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+            </path>
+            <path>
+              <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@4b74f898" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceNode@552c1cbc" type="9fbbdea:ServiceModel$ServiceNode" />
+            </path>
+            <path>
+              <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceGroupNode@4b74f898" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              <item name="com.intellij.execution.services.ServiceModel$ServiceNode@7ae55ad3" type="9fbbdea:ServiceModel$ServiceNode" />
+            </path>
+          </expand>
+          <select />
+        </treeState>
+      </serviceView>
+    </option>
   </component>
   <component name="SvnConfiguration">
     <configuration />
@@ -148,7 +306,8 @@
       <workItem from="1570777675913" duration="558000" />
       <workItem from="1570778248336" duration="7349000" />
       <workItem from="1571127079567" duration="5122000" />
-      <workItem from="1571218240617" duration="2334000" />
+      <workItem from="1571218240617" duration="19839000" />
+      <workItem from="1571299026822" duration="8347000" />
     </task>
     <task id="LOCAL-00001" summary="init commit">
       <created>1570718708321</created>
@@ -164,7 +323,14 @@
       <option name="project" value="LOCAL" />
       <updated>1570720140661</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="update NewAssetsZone">
+      <created>1571220600297</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1571220600297</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -186,6 +352,14 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="init commit" />
     <MESSAGE value="add assets" />
-    <option name="LAST_COMMIT_MESSAGE" value="add assets" />
+    <MESSAGE value="update NewAssetsZone" />
+    <option name="LAST_COMMIT_MESSAGE" value="update NewAssetsZone" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/IMU_DevOps$test_assets.coverage" NAME="test_assets Coverage Results" MODIFIED="1571291196032" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/bin" />
+    <SUITE FILE_PATH="coverage/IMU_DevOps$views.coverage" NAME="views Coverage Results" MODIFIED="1571290279336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/assets" />
+    <SUITE FILE_PATH="coverage/IMU_DevOps$assets_test.coverage" NAME="assets_test Coverage Results" MODIFIED="1571307299011" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/assets" />
+    <SUITE FILE_PATH="coverage/IMU_DevOps$assets_handler.coverage" NAME="assets_handler Coverage Results" MODIFIED="1571290669346" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/assets" />
+    <SUITE FILE_PATH="coverage/IMU_DevOps$test.coverage" NAME="test Coverage Results" MODIFIED="1571291026910" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/test/bin" />
   </component>
 </project>

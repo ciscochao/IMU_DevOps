@@ -21,10 +21,10 @@ def report(request):
         sn = data.get('sn', None)
         if sn:
             # 判断是否为线上资产中存在的资产
-            assets_obj = models.Assets.objects.filter(assets_sn=sn)
+            assets_obj = models.Assets.objects.filter(sn=sn)
             if assets_obj:
                 # 更新线上资产信息
-                pass
+                update_assets = assets_handler.UpdateAsset(request, assets_obj[0], data)
                 return HttpResponse("资产已更新！")
             else:
                 # 进入待审批区域
@@ -33,5 +33,5 @@ def report(request):
                 return HttpResponse(response)
         else:
             return HttpResponse("提交的数据中未包含SN，请校验数据！")
-    return HttpResponse("200 ok")
+    return HttpResponse("怎么就200了！")
 

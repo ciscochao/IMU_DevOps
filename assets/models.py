@@ -23,7 +23,8 @@ class Assets(models.Model):
     )
 
     assets_type = models.CharField(choices=assets_type, max_length=64, default='other', verbose_name='资产类型')
-    assets_sn = models.CharField(max_length=128, unique=True, verbose_name='资产编号')
+    assets_num = models.CharField(max_length=128, unique=True, null=True, verbose_name='资产编号')
+    sn = models.CharField(max_length=128, unique=True, verbose_name="资产序列号")
     assets_name = models.CharField(max_length=64, unique=True, editable=True, verbose_name='资产名称')
     assets_status = models.SmallIntegerField(choices=assets_status, default=4, verbose_name='资产状态')
     assets_manufacturer = models.ForeignKey('ManufacturerAssets', null=True, blank=True, verbose_name='厂商',
@@ -32,7 +33,7 @@ class Assets(models.Model):
                                         verbose_name='所属业务线')
     assets_manage_ip = models.GenericIPAddressField(null=True, blank=True, verbose_name='管理IP地址')
     assets_tags = models.ManyToManyField('TagAssets', blank=True, verbose_name='资产标签')
-    assets_admin = models.ForeignKey('users.UserProfile', blank=True, related_name='asset_admin',
+    assets_admin = models.ForeignKey('users.UserProfile', blank=True, null=True, related_name='asset_admin',
                                      verbose_name='资产管理员', on_delete=models.PROTECT)
     assets_idc = models.ForeignKey('IDCAssets', related_name='assets_idc', on_delete=models.PROTECT, null=True,
                                    blank=True, verbose_name='所在机房')
@@ -77,22 +78,21 @@ class ServerAssets(models.Model):
     )
     # 一对一关联，assets删除时同时删除ServerAssets
     assets = models.OneToOneField('Assets', on_delete=models.CASCADE)
-    server_type = models.SmallIntegerField(choices=server_type_choice, default=2, verbose_name="服务器类型")
-    server_create_by = models.CharField(choices=server_create_by_choice, max_length=32, default='manual',
-                                        verbose_name='添加方式')
-    server_hostname = models.CharField(max_length=100, unique=True, editable=True, verbose_name='主机名')
-    server_sn = models.CharField(max_length=128, unique=True, verbose_name='序列号')
-    server_host_on = models.ForeignKey('self', related_name='host_on_server', blank=True, null=True,
-                                       verbose_name='宿主机', on_delete=models.CASCADE)
-    server_model = models.CharField(max_length=128, blank=True, null=True, verbose_name='服务器型号')
-    server_raid_type = models.CharField(max_length=512, blank=True, null=True, verbose_name='RAID卡类型')
-    server_os_type = models.CharField(max_length=64, blank=True, null=True, verbose_name='操作系统类型')
-    server_os_distribution = models.CharField(max_length=64, blank=True, null=True, verbose_name='发行商')
-    server_os_release = models.CharField(max_length=64, blank=True, null=True, verbose_name='内核版本')
+    type = models.SmallIntegerField(choices=server_type_choice, default=2, verbose_name="服务器类型")
+    create_by = models.CharField(choices=server_create_by_choice, max_length=32, default='manual',
+                                 verbose_name='添加方式')
+    hostname = models.CharField(max_length=100, unique=True, null=True, editable=True, verbose_name='主机名')
+    host_on = models.ForeignKey('self', related_name='host_on_server', blank=True, null=True,
+                                verbose_name='宿主机', on_delete=models.CASCADE)
+    model = models.CharField(max_length=128, blank=True, null=True, verbose_name='服务器型号')
+    raid_type = models.CharField(max_length=512, blank=True, null=True, verbose_name='RAID卡类型')
+    os_type = models.CharField(max_length=64, blank=True, null=True, verbose_name='操作系统类型')
+    os_distribution = models.CharField(max_length=64, blank=True, null=True, verbose_name='发行商')
+    os_release = models.CharField(max_length=64, blank=True, null=True, verbose_name='内核版本')
 
     def __str__(self):
-        return '%s--%s--%s--<assets_sn:%s>' % (self.assets.assets_name, self.get_server_type_display(),
-                                               self.server_model, self.assets.assets_sn)
+        return '%s--%s--%s--<assets_num:%s>' % (self.assets.assets_name, self.get_type_display(),
+                                                self.model, self.assets.assets_num)
 
     class Meta:
         db_table = 'imu_server_assets'
@@ -111,16 +111,15 @@ class NetworkAssets(models.Model):
         (4, '流量控制'),
     )
     assets = models.OneToOneField('Assets', on_delete=models.CASCADE)
-    network_type = models.SmallIntegerField(choices=network_type_choice, default=1, verbose_name='设备类型')
-    network_sn = models.CharField(max_length=128, unique=True, verbose_name='设备序列号')
-    network_hostname = models.CharField(max_length=100, unique=True, editable=True, verbose_name='主机名')
-    network_model = models.CharField(max_length=128, blank=True, null=True, verbose_name='设备型号')
-    network_port_num = models.IntegerField(blank=True, null=True, verbose_name='端口数')
-    network_firmware = models.CharField(max_length=100, blank=True, null=True, verbose_name='固件版本')
+    type = models.SmallIntegerField(choices=network_type_choice, default=1, verbose_name='设备类型')
+    hostname = models.CharField(max_length=100, unique=True, editable=True, verbose_name='主机名')
+    model = models.CharField(max_length=128, blank=True, null=True, verbose_name='设备型号')
+    port_num = models.IntegerField(blank=True, null=True, verbose_name='端口数')
+    firmware = models.CharField(max_length=100, blank=True, null=True, verbose_name='固件版本')
 
     def __str__(self):
-        return '%s--%s--%s--<assets_sn:%s>' % (self.assets.assets_name, self.get_network_type_display(),
-                                               self.network_model, self.assets.assets_sn)
+        return '%s--%s--%s--<assets_sn:%s>' % (self.assets.assets_name, self.get_type_display(),
+                                               self.model, self.assets.assets_num)
 
     class Meta:
         db_table = 'imu_network_assets'
@@ -144,14 +143,13 @@ class SecurityAssets(models.Model):
         (9, 'other'),
     )
     assets = models.OneToOneField('Assets', on_delete=models.CASCADE)
-    security_type = models.SmallIntegerField(choices=security_type_choice, default=9, verbose_name='产品类型')
-    security_sn = models.CharField(max_length=128, unique=True, verbose_name='设备序列号')
-    security_hostname = models.CharField(max_length=100, unique=True, editable=True, verbose_name='主机名')
-    security_model = models.CharField(max_length=128, blank=True, null=True, verbose_name='设备型号')
-    security_firmware = models.CharField(max_length=100, blank=True, null=True, verbose_name='固件版本')
+    type = models.SmallIntegerField(choices=security_type_choice, default=9, verbose_name='产品类型')
+    hostname = models.CharField(max_length=100, unique=True, editable=True, verbose_name='主机名')
+    model = models.CharField(max_length=128, blank=True, null=True, verbose_name='设备型号')
+    firmware = models.CharField(max_length=100, blank=True, null=True, verbose_name='固件版本')
 
     def __str__(self):
-        return self.assets.assets_name + "--" + self.get_security_type_display() + str(self.security_model) + "id:%s" \
+        return self.assets.assets_name + "--" + self.get_type_display() + str(self.model) + "id:%s" \
                % self.id
 
     class Meta:
@@ -171,13 +169,12 @@ class StorageAssets(models.Model):
         (4, '其他'),
     )
     assets = models.OneToOneField('Assets', on_delete=models.CASCADE)
-    storage_type = models.SmallIntegerField(choices=storage_type_choice, default=4, verbose_name='存储类型')
-    storage_sn = models.CharField(max_length=128, unique=True, verbose_name='设备序列号')
-    storage_model = models.CharField(max_length=128, blank=True, null=True, verbose_name='设备型号')
-    storage_firmware = models.CharField(max_length=100, blank=True, null=True, verbose_name='固件版本')
+    type = models.SmallIntegerField(choices=storage_type_choice, default=4, verbose_name='存储类型')
+    model = models.CharField(max_length=128, blank=True, null=True, verbose_name='设备型号')
+    firmware = models.CharField(max_length=100, blank=True, null=True, verbose_name='固件版本')
 
     def __str__(self):
-        return '%s--%s--%s<id:%s>' % (self.assets.assets_name, self.get_storage_type_display(), str(self.storage_model),
+        return '%s--%s--%s<id:%s>' % (self.assets.assets_name, self.get_type_display(), str(self.model),
                                       self.id)
 
     class Meta:
@@ -198,13 +195,13 @@ class SoftAssets(models.Model):
         (5, '其他'),
     )
     assets = models.OneToOneField('Assets', related_name='soft_assets', on_delete=models.CASCADE)
-    soft_type = models.SmallIntegerField(choices=soft_type_choice, default=5, verbose_name='软件资产类型')
-    soft_license_num = models.IntegerField(default=1, verbose_name='授权数量')
-    soft_version = models.CharField(max_length=100, blank=True, null=True, help_text="例如：Cent 5.2.9-2kali1",
-                                    verbose_name='软件版本')
+    type = models.SmallIntegerField(choices=soft_type_choice, default=5, verbose_name='软件资产类型')
+    license_num = models.IntegerField(default=1, verbose_name='授权数量')
+    version = models.CharField(max_length=100, blank=True, null=True, help_text="例如：Cent 5.2.9-2kali1",
+                               verbose_name='软件版本')
 
     def __str__(self):
-        return '%s--%s--%s' % (self.assets.assets_name, self.get_soft_type_display(), self.soft_version)
+        return '%s--%s--%s' % (self.assets.assets_name, self.get_type_display(), self.version)
 
     class Meta:
         db_table = 'imu_soft_assets'
@@ -226,12 +223,11 @@ class OfficeAssets(models.Model):
         (7, '其他'),
     )
     assets = models.OneToOneField('Assets', related_name='office_assets', on_delete=models.CASCADE)
-    office_type = models.SmallIntegerField(choices=office_type_choice, default=7, verbose_name='办公设备类型')
-    office_sn = models.CharField(max_length=128, unique=True, verbose_name='设备序列号')
-    office_user = models.CharField(max_length=100, unique=True, editable=True, verbose_name='使用人')
+    type = models.SmallIntegerField(choices=office_type_choice, default=7, verbose_name='办公设备类型')
+    user = models.CharField(max_length=100, unique=True, editable=True, verbose_name='使用人')
 
     def __str__(self):
-        return '%s--%s--%s' % (self.assets.assets_name, self.get_office_type_display(), self.office_user)
+        return '%s--%s--%s' % (self.assets.assets_name, self.get_type_display(), self.user)
 
     class Meta:
         db_table = 'imu_office_assets'
@@ -242,14 +238,14 @@ class OfficeAssets(models.Model):
 class ManufacturerAssets(models.Model):
     """厂商信息表"""
 
-    manufacturer_name = models.CharField(max_length=100, unique=True, verbose_name='厂商名称')
-    manufacturer_contacts = models.CharField(max_length=100, verbose_name='厂商联系人')
-    manufacturer_phone = models.CharField(max_length=11, null=True, unique=True, verbose_name="联系人电话")
-    manufacturer_email = models.EmailField(unique=True, verbose_name='联系邮箱')
-    manufacturer_memo = models.CharField(max_length=128, blank=True, null=True, verbose_name='备注')
+    name = models.CharField(max_length=100, unique=True, verbose_name='厂商名称')
+    contacts = models.CharField(max_length=100, verbose_name='厂商联系人')
+    phone = models.CharField(max_length=11, null=True, unique=True, verbose_name="联系人电话")
+    email = models.EmailField(unique=True, null=True, verbose_name='联系邮箱')
+    memo = models.CharField(max_length=128, blank=True, null=True, verbose_name='备注')
 
     def __str__(self):
-        return '%s--%s' % (self.manufacturer_name, self.manufacturer_contacts)
+        return '%s--%s' % (self.name, self.contacts)
 
     class Meta:
         db_table = 'imu_manufacturer_assets'
@@ -260,13 +256,13 @@ class ManufacturerAssets(models.Model):
 class BusinessAssets(models.Model):
     """业务线"""
 
-    business_name = models.CharField(max_length=100, unique=True, verbose_name='业务线名称')
-    business_charge = models.ForeignKey('users.UserProfile', blank=True, verbose_name='业务负责人',
-                                        on_delete=models.PROTECT)
-    business_department = models.CharField(max_length=100, blank=True, verbose_name='所属部门')
+    name = models.CharField(max_length=100, unique=True, verbose_name='业务线名称')
+    charge = models.ForeignKey('users.UserProfile', blank=True, verbose_name='业务负责人',
+                               on_delete=models.PROTECT)
+    department = models.CharField(max_length=100, blank=True, verbose_name='所属部门')
 
     def __str__(self):
-        return self.business_name + self.business_department
+        return self.name + self.department
 
     class Meta:
         db_table = 'imu_business_assets'
@@ -277,11 +273,11 @@ class BusinessAssets(models.Model):
 class TagAssets(models.Model):
     """资产标签表"""
 
-    tag_name = models.CharField(max_length=32, unique=True, verbose_name='标签名')
-    tag_c_day = models.DateField(auto_now_add=True, verbose_name='创建日期')
+    name = models.CharField(max_length=32, unique=True, verbose_name='标签名')
+    c_day = models.DateField(auto_now_add=True, verbose_name='创建日期')
 
     def __str__(self):
-        return self.tag_name
+        return self.name
 
     class Meta:
         db_table = 'imu_tag_assets'
@@ -292,16 +288,16 @@ class TagAssets(models.Model):
 class IDCAssets(models.Model):
     """机房资产表"""
 
-    idc_name = models.CharField('机房名称', max_length=64, unique=True)
-    idc_address = models.CharField('机房地址', max_length=100, unique=True)
-    idc_contract = models.ForeignKey('ContractAssets', null=True, blank=True, on_delete=models.SET_NULL,
-                                     verbose_name='机房合同')
-    idc_contact = models.CharField('机房联系人', max_length=32)
-    idc_telephone = models.CharField('支持电话', max_length=11, blank=True, null=True)
-    idc_memo = models.CharField('备注', max_length=100, blank=True, null=True)
+    name = models.CharField('机房名称', max_length=64, unique=True)
+    address = models.CharField('机房地址', max_length=100, unique=True)
+    contract = models.ForeignKey('ContractAssets', null=True, blank=True, on_delete=models.SET_NULL,
+                                 verbose_name='机房合同')
+    contact = models.CharField('机房联系人', max_length=32)
+    telephone = models.CharField('支持电话', max_length=11, blank=True, null=True)
+    memo = models.CharField('备注', max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return self.idc_name
+        return self.name
 
     class Meta:
         db_table = 'imu_idc_assets'
@@ -313,13 +309,13 @@ class CabinetAssets(models.Model):
     """机柜资产表"""
 
     idc = models.ForeignKey('IDCAssets', related_name='cabinet', on_delete=models.CASCADE)
-    cabinet_name = models.CharField('机柜名称', max_length=64, unique=True)
-    cabinet_U_num = models.CharField('机柜总U数', max_length=100, blank=True)
-    cabinet_used = models.CharField('已使用空间', max_length=100, blank=True)
-    cabinet_memo = models.CharField('备注', max_length=100, blank=True, null=True)
+    name = models.CharField('机柜名称', max_length=64, unique=True)
+    U_num = models.CharField('机柜总U数', max_length=100, blank=True)
+    used = models.CharField('已使用空间', max_length=100, blank=True)
+    memo = models.CharField('备注', max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return self.cabinet_name
+        return self.name
 
     class Meta:
         db_table = 'imu_cabinet_assets'
@@ -330,18 +326,18 @@ class CabinetAssets(models.Model):
 class ContractAssets(models.Model):
     """合同资产表"""
 
-    contract_sn = models.CharField('合同号', max_length=128, unique=True)
-    contract_name = models.CharField('合同名称', max_length=100)
-    contract_price = models.IntegerField('合同金额')
-    contract_detail = models.TextField('详细合同', blank=True, null=True)
-    contract_start_day = models.DateField('生效日期', blank=True, null=True)
-    contract_end_day = models.DateField('失效日期', blank=True, null=True)
-    contract_c_day = models.DateField('创建时间', auto_now_add=True)
-    contract_m_day = models.DateField('修改日期', auto_now=True)
-    contract_memo = models.TextField('备注', blank=True, null=True)
+    sn = models.CharField('合同号', max_length=128, unique=True)
+    name = models.CharField('合同名称', max_length=100)
+    price = models.IntegerField('合同金额')
+    detail = models.TextField('详细合同', blank=True, null=True)
+    start_day = models.DateField('生效日期', blank=True, null=True)
+    end_day = models.DateField('失效日期', blank=True, null=True)
+    c_day = models.DateField('创建时间', auto_now_add=True)
+    m_day = models.DateField('修改日期', auto_now=True)
+    memo = models.TextField('备注', blank=True, null=True)
 
     def __str__(self):
-        return self.contract_name
+        return self.name
 
     class Meta:
         db_table = 'imu_contract_assets'
@@ -353,21 +349,21 @@ class NICAssets(models.Model):
     """网卡组件"""
 
     assets = models.ForeignKey('Assets', related_name='nic_assets', on_delete=models.CASCADE)  # 注意要用外键
-    nic_name = models.CharField('网卡名称', max_length=64, blank=True, null=True)
-    nic_model = models.CharField('网卡型号', max_length=128)
-    nic_mac = models.CharField('MAC地址', max_length=64)  # 虚拟机有可能会出现同样的mac地址
-    nic_ip_address = models.GenericIPAddressField('IP地址', blank=True, null=True)
-    nic_net_mask = models.CharField('掩码', max_length=64, blank=True, null=True)
-    nic_binding = models.CharField('绑定地址', max_length=64, blank=True, null=True)
+    name = models.CharField('网卡名称', max_length=64, blank=True, null=True)
+    model = models.CharField('网卡型号', max_length=128)
+    mac = models.CharField('MAC地址', max_length=64)  # 虚拟机有可能会出现同样的mac地址
+    ip_address = models.GenericIPAddressField('IP地址', blank=True, null=True)
+    net_mask = models.CharField('掩码', max_length=64, blank=True, null=True)
+    binding = models.CharField('绑定地址', max_length=64, blank=True, null=True)
 
     def __str__(self):
-        return '%s:  %s:  %s' % (self.assets.assets_name, self.nic_model, self.nic_mac)
+        return '%s:  %s:  %s' % (self.assets.assets_name, self.model, self.mac)
 
     class Meta:
         db_table = 'imu_nic_assets'
         verbose_name = '网卡'
         verbose_name_plural = verbose_name
-        unique_together = ('assets', 'nic_model', 'nic_mac')
+        unique_together = ('assets', 'model', 'mac')
 
 
 class DiskAssets(models.Model):
@@ -384,42 +380,42 @@ class DiskAssets(models.Model):
     )
 
     assets = models.ForeignKey('Assets', related_name='disk_assets', on_delete=models.CASCADE)
-    disk_sn = models.CharField('硬盘SN号', max_length=128)
-    disk_slot = models.CharField('所在插槽位', max_length=64, blank=True, null=True)
-    disk_model = models.CharField('磁盘型号', max_length=128, blank=True, null=True)
-    disk_brand = models.CharField('磁盘制造商', max_length=128, blank=True, null=True)
-    disk_volume = models.FloatField('磁盘容量(GB)', blank=True, null=True)
-    disk_interface_type = models.CharField('接口类型', max_length=16, choices=disk_interface_type_choice,
-                                           default='unknown')
+    slot = models.CharField('所在插槽位', max_length=64, blank=True, null=True)
+    sn = models.CharField('硬盘SN号', max_length=128)
+    model = models.CharField('磁盘型号', max_length=128, blank=True, null=True)
+    brand = models.CharField('磁盘制造商', max_length=128, blank=True, null=True)
+    volume = models.FloatField('磁盘容量(GB)', blank=True, null=True)
+    interface_type = models.CharField('接口类型', max_length=16, choices=disk_interface_type_choice,
+                                      default='unknown')
 
     def __str__(self):
-        return '%s:  %s:  %s:  %sGB' % (self.assets.assets_name, self.disk_model, self.disk_slot, self.disk_volume)
+        return '%s:  %s:  %s:  %sGB' % (self.assets.assets_name, self.model, self.slot, self.volume)
 
     class Meta:
         db_table = 'imu_disk_assets'
         verbose_name = '硬盘'
         verbose_name_plural = verbose_name
-        unique_together = ('assets', 'disk_sn')
+        unique_together = ('assets', 'sn')
 
 
 class RAMAssets(models.Model):
     """内存组件"""
 
     assets = models.ForeignKey('Assets', related_name='ram_assets', on_delete=models.CASCADE)
-    ram_sn = models.CharField('SN号', max_length=128, blank=True, null=True)
-    ram_model = models.CharField('内存型号', max_length=128, blank=True, null=True)
-    ram_brand = models.CharField('内存制造商', max_length=128, blank=True, null=True)
-    ram_slot = models.CharField('插槽', max_length=64)
-    ram_volume = models.IntegerField('内存大小(GB)', blank=True, null=True)
+    sn = models.CharField('SN号', max_length=128, blank=True, null=True)
+    model = models.CharField('内存型号', max_length=128, blank=True, null=True)
+    brand = models.CharField('内存制造商', max_length=128, blank=True, null=True)
+    slot = models.CharField('插槽', max_length=64)
+    volume = models.IntegerField('内存大小(GB)', blank=True, null=True)
 
     def __str__(self):
-        return '%s: %s: %s: %s' % (self.assets.assets_name, self.ram_model, self.ram_slot, self.ram_volume)
+        return '%s: %s: %s: %s' % (self.assets.assets_name, self.model, self.slot, self.volume)
 
     class Meta:
         db_table = 'imu_ram_assets'
         verbose_name = '内存'
         verbose_name_plural = verbose_name
-        unique_together = ('assets', 'ram_slot')
+        unique_together = ('assets', 'slot')
 
 
 class CPUAssets(models.Model):
@@ -431,7 +427,7 @@ class CPUAssets(models.Model):
     cpu_core_count = models.PositiveSmallIntegerField('CPU核数', default=1)
 
     def __str__(self):
-        return self.assets.assets_name + ":   " + self.cpu_model
+        return self.assets.assets_name
 
     class Meta:
         db_table = 'imu_cpu_assets'
@@ -442,13 +438,13 @@ class CPUAssets(models.Model):
 class DomainAssets(models.Model):
     """域名资产表"""
 
-    domain_name = models.CharField('域名名称', max_length=64, blank=True, null=True)
-    domain_address = models.URLField('域名地址', max_length=100, null=False)
-    domain_int_ip = models.GenericIPAddressField('对内IP地址', blank=True, null=True)
-    domain_out_ip = models.GenericIPAddressField('对外IP地址', blank=True, null=True)
-    domain_department = models.CharField('所属部门', max_length=64, blank=True, null=True)
-    domain_admin = models.ForeignKey('users.UserProfile', blank=True, related_name='domain_admin',
-                                     verbose_name='域名管理员', on_delete=models.PROTECT)
+    name = models.CharField('域名名称', max_length=64, blank=True, null=True)
+    address = models.URLField('域名地址', max_length=100, null=False)
+    int_ip = models.GenericIPAddressField('对内IP地址', blank=True, null=True)
+    out_ip = models.GenericIPAddressField('对外IP地址', blank=True, null=True)
+    department = models.CharField('所属部门', max_length=64, blank=True, null=True)
+    admin = models.ForeignKey('users.UserProfile', blank=True, related_name='domain_admin',
+                              verbose_name='域名管理员', on_delete=models.PROTECT)
 
     class Meta:
         db_table = 'imu_domain_assets'
@@ -459,11 +455,11 @@ class DomainAssets(models.Model):
 class ProviderAssets(models.Model):
     """供应商信息表"""
 
-    provider_name = models.CharField('供应商名称', max_length=64, unique=True)
-    provider_contact = models.CharField('技术支持人员', max_length=32, blank=True, null=True)
-    provider_phone = models.CharField('支持电话', max_length=11, blank=True, null=True)
-    provider_email = models.EmailField('供应商邮箱', unique=True)
-    provider_memo = models.CharField('备注', max_length=128, blank=True, null=True)
+    name = models.CharField('供应商名称', max_length=64, unique=True)
+    contact = models.CharField('技术支持人员', max_length=32, blank=True, null=True)
+    phone = models.CharField('支持电话', max_length=11, blank=True, null=True)
+    email = models.EmailField('供应商邮箱', unique=True)
+    memo = models.CharField('备注', max_length=128, blank=True, null=True)
 
     class Meta:
         db_table = 'imu_provider_assets'
@@ -478,10 +474,10 @@ class CloudAssets(models.Model):
         (0, '公有云'),
         (1, '私有云'),
     )
-    cloud_type = models.SmallIntegerField('云类型', choices=cloud_type_choice, default=1)
-    cloud_brand = models.CharField('云厂商', max_length=100, blank=True, null=True)
-    cloud_admin = models.ForeignKey('users.UserProfile', blank=True, related_name='cloud_admin',
-                                    verbose_name='云平台管理员', on_delete=models.PROTECT)
+    type = models.SmallIntegerField('云类型', choices=cloud_type_choice, default=1)
+    brand = models.CharField('云厂商', max_length=100, blank=True, null=True)
+    admin = models.ForeignKey('users.UserProfile', blank=True, related_name='cloud_admin',
+                              verbose_name='云平台管理员', on_delete=models.PROTECT)
 
     class Meta:
         db_table = 'imu_cloud_assets'
@@ -492,13 +488,13 @@ class CloudAssets(models.Model):
 class OtherAssets(models.Model):
     """其他资产表"""
 
-    other_name = models.CharField('资产名称', max_length=64, unique=True)
-    other_sn = models.CharField('SN号', max_length=128, blank=True, null=True)
-    other_admin = models.ForeignKey('users.UserProfile', blank=True, related_name='other_admin',
-                                    verbose_name='资产管理员', on_delete=models.PROTECT)
+    name = models.CharField('资产名称', max_length=64, unique=True)
+    sn = models.CharField('SN号', max_length=128, blank=True, null=True)
+    admin = models.ForeignKey('users.UserProfile', blank=True, related_name='other_admin',
+                              verbose_name='资产管理员', on_delete=models.PROTECT)
 
     def __str__(self):
-        return self.other_name
+        return self.name
 
     class Meta:
         db_table = 'imu_other_assets'
@@ -521,9 +517,9 @@ class EventLog(models.Model):
         (7, '业务上线/变更/更新'),
     )
 
-    asset = models.ForeignKey('Assets', blank=True, null=True, on_delete=models.SET_NULL)
-    new_asset = models.ForeignKey('NewAssetApprovalZone', blank=True, null=True, on_delete=models.SET_NULL)
-    event_type = models.SmallIntegerField('事件类型', choices=event_type_choice, default=0)
+    assets = models.ForeignKey('Assets', blank=True, null=True, on_delete=models.SET_NULL)
+    new_assets = models.ForeignKey('NewAssetApprovalZone', blank=True, null=True, on_delete=models.SET_NULL)
+    type = models.SmallIntegerField('事件类型', choices=event_type_choice, default=0)
     component = models.CharField('事件子项', max_length=256, blank=True, null=True)
     detail = models.TextField('事件详情')
     date = models.DateTimeField('事件时间', auto_now_add=True)
@@ -553,7 +549,7 @@ class NewAssetApprovalZone(models.Model):
         ('office', '办公设备'),
         ('other', '其他设备'),
     )
-    type = models.CharField('资产类型', choices=type_choice, default='server', max_length=64, blank=True, null=True)
+    assets_type = models.CharField('资产类型', choices=type_choice, default='server', max_length=64, blank=True, null=True)
     manufacturer = models.CharField('生产厂商', max_length=64, blank=True, null=True)
     model = models.CharField('型号', max_length=128, blank=True, null=True)
     ram_volume = models.PositiveIntegerField('内存大小', blank=True, null=True)
