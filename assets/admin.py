@@ -11,7 +11,7 @@ class NewAssetsAdmin(admin.ModelAdmin):
     actions = ['approve_selected_new_assets']
 
     def approve_selected_new_assets(self, request, queryset):
-        # 获取选中的资产
+        # 获取复选框选中的资产
         selected = request.POST.getlist(admin.ACTION_CHECKBOX_NAME)
         success_online_number = 0
         for assets_id in selected:

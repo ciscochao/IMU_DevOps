@@ -29,7 +29,7 @@ class NewAssets(object):
             'assets_type': self.data.get('assets_type'),
             'manufacturer': self.data.get('manufacturer'),
             'model': self.data.get('model'),
-            # 'volume': self.data.get('volume'),
+            # 'volume': self.data.get(),
             'cpu_model': self.data.get('cpu_model'),
             'cpu_count': self.data.get('cpu_count'),
             'cpu_core_count': self.data.get('cpu_core_count'),
@@ -43,6 +43,7 @@ class NewAssets(object):
             ram_volume += ram[i].get('volume')
         models.NewAssetApprovalZone.objects.update_or_create(sn=self.data['sn'], defaults=defaults,
                                                              ram_volume=ram_volume)
+        # models.NewAssetApprovalZone.objects.update_or_create(sn=self.data['sn'], defaults=defaults)
 
         return '资产已加入或更新至待审批区！'
 
@@ -176,8 +177,8 @@ class ApproveAssets:
         self.new_assets.delete()
 
 
-class UpdateAsset:
-    # 更新一上线资产信息
+class UpdateAssets:
+    # 更新已上线资产信息
     def __init__(self, request, assets, report_data):
         self.request = request
         self.assets = assets
@@ -278,7 +279,7 @@ class UpdateAsset:
 
     def _update_disk(self):
         """
-        更新硬盘信息。类似更新内存。
+        更新硬盘信息,类似更新内存。
         """
         old_disks = models.DiskAssets.objects.filter(assets=self.assets)
         old_disks_dict = dict()
@@ -315,7 +316,7 @@ class UpdateAsset:
 
     def _update_nic(self):
         """
-        更新网卡信息。类似更新内存。
+        更新网卡信息,类似更新内存。
         """
         old_nics = models.NICAssets.objects.filter(assets=self.assets)
         old_nics_dict = dict()
@@ -367,11 +368,11 @@ def log(log_type, msg=None, assets=None, new_assets=None, request=None):
         event.detail = "审批失败！\n%s" % msg
         event.user = request.user
     elif log_type == "update_success":
-        event.name = "%s <%s> ：  数据更新！" % (assets.assets_type, assets.sn)
+        event.name = "%s [%s] <%s> ：  数据更新！" % (assets.assets_type, assets.assets_name, assets.sn)
         event.assets = assets
         event.detail = "更新成功！"
     elif log_type == "update_failed":
-        event.name = "%s <%s> ：  更新失败" % (assets.assets_type, assets.sn)
+        event.name = "%s [%s] <%s> ：  更新失败" % (assets.assets_type, assets.assets_name, assets.sn)
         event.assets = assets
         event.detail = "更新失败！\n%s" % msg
         # 更多日志类型.....

@@ -27,6 +27,8 @@ Params = {
 # 日志文件配置
 
 # PATH = os.path.join(os.path.dirname(os.getcwd()), 'IMU_DevOps', 'test', './Log', 'IMU_assets.log')
-PATH = "/root/Python/Projects/IMU_DevOps/Log/CMDB.log"
+PATH = os.path.join(os.path.dirname(os.getcwd()), 'Log', 'IMU_assets.log')
+print(PATH)
+# PATH = "/root/Python/Projects/IMU_DevOps/Log/CMDB.log"
 
 

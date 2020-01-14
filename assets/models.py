@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class Assets(models.Model):
@@ -33,7 +34,7 @@ class Assets(models.Model):
                                         verbose_name='所属业务线')
     assets_manage_ip = models.GenericIPAddressField(null=True, blank=True, verbose_name='管理IP地址')
     assets_tags = models.ManyToManyField('TagAssets', blank=True, verbose_name='资产标签')
-    assets_admin = models.ForeignKey('users.UserProfile', blank=True, null=True, related_name='asset_admin',
+    assets_admin = models.ForeignKey(User, blank=True, null=True, related_name='asset_admin',
                                      verbose_name='资产管理员', on_delete=models.PROTECT)
     assets_idc = models.ForeignKey('IDCAssets', related_name='assets_idc', on_delete=models.PROTECT, null=True,
                                    blank=True, verbose_name='所在机房')
@@ -44,10 +45,10 @@ class Assets(models.Model):
     assets_purchase_day = models.DateField(null=True, blank=True, verbose_name='购买日期')
     assets_expire_day = models.DateField(null=True, blank=True, verbose_name='过保日期')
     assets_price = models.CharField(max_length=100, null=True, blank=True, verbose_name='价格(RMB)')
-    assets_approved = models.ForeignKey('users.UserProfile', null=True, blank=True, related_name='asset_approved',
+    assets_approved = models.ForeignKey(User, null=True, blank=True, related_name='asset_approved',
                                         on_delete=models.SET_NULL, verbose_name='批准人')
     assets_c_time = models.DateTimeField(auto_now_add=True, verbose_name='批准时间')
-    assets_u_time = models.DateTimeField(auto_now_add=True, verbose_name='更新时间')
+    assets_u_time = models.DateTimeField(auto_now=True, verbose_name='更新时间')
     assets_memo = models.TextField(null=True, blank=True, verbose_name='备注')
 
     def __str__(self):
@@ -257,7 +258,7 @@ class BusinessAssets(models.Model):
     """业务线"""
 
     name = models.CharField(max_length=100, unique=True, verbose_name='业务线名称')
-    charge = models.ForeignKey('users.UserProfile', blank=True, verbose_name='业务负责人',
+    charge = models.ForeignKey(User, blank=True, verbose_name='业务负责人',
                                on_delete=models.PROTECT)
     department = models.CharField(max_length=100, blank=True, verbose_name='所属部门')
 
@@ -363,7 +364,7 @@ class NICAssets(models.Model):
         db_table = 'imu_nic_assets'
         verbose_name = '网卡'
         verbose_name_plural = verbose_name
-        unique_together = ('assets', 'model', 'mac')
+        unique_together = ('assets', 'model', 'mac')  # 资产、型号、MAC地址必须联合唯一，避免虚拟化中特殊情况发生错误。
 
 
 class DiskAssets(models.Model):
@@ -395,7 +396,7 @@ class DiskAssets(models.Model):
         db_table = 'imu_disk_assets'
         verbose_name = '硬盘'
         verbose_name_plural = verbose_name
-        unique_together = ('assets', 'sn')
+        unique_together = ('assets', 'sn')  # 同一资产下的硬盘，根据SN不同必须唯一。
 
 
 class RAMAssets(models.Model):
@@ -415,7 +416,7 @@ class RAMAssets(models.Model):
         db_table = 'imu_ram_assets'
         verbose_name = '内存'
         verbose_name_plural = verbose_name
-        unique_together = ('assets', 'slot')
+        unique_together = ('assets', 'slot')  # 同一资产下的内存，根据插槽不同必须唯一。
 
 
 class CPUAssets(models.Model):
@@ -443,7 +444,7 @@ class DomainAssets(models.Model):
     int_ip = models.GenericIPAddressField('对内IP地址', blank=True, null=True)
     out_ip = models.GenericIPAddressField('对外IP地址', blank=True, null=True)
     department = models.CharField('所属部门', max_length=64, blank=True, null=True)
-    admin = models.ForeignKey('users.UserProfile', blank=True, related_name='domain_admin',
+    admin = models.ForeignKey(User, blank=True, related_name='domain_admin',
                               verbose_name='域名管理员', on_delete=models.PROTECT)
 
     class Meta:
@@ -476,7 +477,7 @@ class CloudAssets(models.Model):
     )
     type = models.SmallIntegerField('云类型', choices=cloud_type_choice, default=1)
     brand = models.CharField('云厂商', max_length=100, blank=True, null=True)
-    admin = models.ForeignKey('users.UserProfile', blank=True, related_name='cloud_admin',
+    admin = models.ForeignKey(User, blank=True, related_name='cloud_admin',
                               verbose_name='云平台管理员', on_delete=models.PROTECT)
 
     class Meta:
@@ -490,7 +491,7 @@ class OtherAssets(models.Model):
 
     name = models.CharField('资产名称', max_length=64, unique=True)
     sn = models.CharField('SN号', max_length=128, blank=True, null=True)
-    admin = models.ForeignKey('users.UserProfile', blank=True, related_name='other_admin',
+    admin = models.ForeignKey(User, blank=True, related_name='other_admin',
                               verbose_name='资产管理员', on_delete=models.PROTECT)
 
     def __str__(self):
@@ -517,13 +518,13 @@ class EventLog(models.Model):
         (7, '业务上线/变更/更新'),
     )
 
-    assets = models.ForeignKey('Assets', blank=True, null=True, on_delete=models.SET_NULL)
+    assets = models.ForeignKey('Assets', blank=True, null=True, on_delete=models.SET_NULL)  # 日志不能随着资产删除而删除
     new_assets = models.ForeignKey('NewAssetApprovalZone', blank=True, null=True, on_delete=models.SET_NULL)
     type = models.SmallIntegerField('事件类型', choices=event_type_choice, default=0)
     component = models.CharField('事件子项', max_length=256, blank=True, null=True)
     detail = models.TextField('事件详情')
     date = models.DateTimeField('事件时间', auto_now_add=True)
-    user = models.ForeignKey('users.UserProfile', blank=True, null=True, verbose_name="事件执行人",
+    user = models.ForeignKey(User, blank=True, null=True, verbose_name="事件执行人",
                              on_delete=models.SET_NULL)
     memo = models.TextField('备注', blank=True, null=True)
 

@@ -4,6 +4,8 @@ from django.views.decorators.csrf import csrf_exempt
 import json
 from assets import models
 from assets import assets_handler
+from django.shortcuts import get_object_or_404
+
 
 # Create your views here.
 @csrf_exempt
@@ -24,7 +26,7 @@ def report(request):
             assets_obj = models.Assets.objects.filter(sn=sn)
             if assets_obj:
                 # 更新线上资产信息
-                update_assets = assets_handler.UpdateAsset(request, assets_obj[0], data)
+                update_assets = assets_handler.UpdateAssets(request, assets_obj[0], data)
                 return HttpResponse("资产已更新！")
             else:
                 # 进入待审批区域
@@ -35,3 +37,17 @@ def report(request):
             return HttpResponse("提交的数据中未包含SN，请校验数据！")
     return HttpResponse("怎么就200了！")
 
+
+def index(request):
+    assets = models.Assets.objects.all()
+    return render(request, 'assets/index.html', locals())
+
+
+def dashboard(request):
+    pass
+    return render(request, 'assets/dashborad.html', locals())
+
+
+def detail(request):
+    pass
+    return render(request, 'assets/detail.html', locals())
